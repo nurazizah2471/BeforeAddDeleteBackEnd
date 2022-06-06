@@ -97,6 +97,10 @@ struct IndicatorDescriptionShow: View{
         return tmp
     }
     
+//    var destinationIndex: Int {
+//        destinationData.destinations.firstIndex(where: { $0.id == destination.id })!
+//    }
+    
     var body: some View{
         VStack(alignment: .leading){
             Text(destination.description)
@@ -104,8 +108,8 @@ struct IndicatorDescriptionShow: View{
             HStack{
                 Text("Will be visited on:")
                 
-                if(destination.plandate != "0"){
-                    Text("\(destination.plandate)")
+                if(DestinationData().destinations[destinationData.destinations.firstIndex(where: { $0.id == destination.id })!].plandate != "0"){
+                    Text("\(DestinationData().destinations[destinationData.destinations.firstIndex(where: { $0.id == destination.id })!].plandate)")
                         .fontWeight(.heavy)
                 } else {
                     Text("-")
@@ -113,11 +117,11 @@ struct IndicatorDescriptionShow: View{
             }
             .padding(.bottom)
             
-            if((!destination.isBookmark && CheckAvailable() > 1) || destination.isBookmark){
+            if((!DestinationData().destinations[destinationData.destinations.firstIndex(where: { $0.id == destination.id })!].isBookmark && CheckAvailable() > 1) || DestinationData().destinations[destinationData.destinations.firstIndex(where: { $0.id == destination.id })!].isBookmark){
                 Button {
                     isPresented.toggle()
                 } label: {
-                    if(destination.isBookmark){
+                    if(DestinationData().destinations[destinationData.destinations.firstIndex(where: { $0.id == destination.id })!].isBookmark){
                         Label("Edit My Visit Date", systemImage: "calendar")
                             .frame(maxWidth: .infinity)
                     } else {
@@ -143,6 +147,23 @@ struct IndicatorDescriptionShow: View{
                 .frame(width: UIScreen.main.bounds.width*(95/100) )
                 .foregroundColor(Color.white)
                 .cornerRadius(10)
+            }
+            if(DestinationData().destinations[destinationData.destinations.firstIndex(where: { $0.id == destination.id })!].isBookmark){
+                VStack{
+                    Button {
+                        MyBookmark.setup()
+                        MyBookmark.destinations[destinationData.destinations.firstIndex(where: { $0.id == destination.id })!].isBookmark = false
+                        MyBookmark.destinations[destinationData.destinations.firstIndex(where: { $0.id == destination.id })!].plandate = "0"
+                    } label: {
+                        Label("Remove From My Plan", systemImage: "trash.fill")
+                            .frame(maxWidth: .infinity)
+                            .font(.system(size: 17, weight: .semibold, design: .rounded))
+                    }
+                    .padding()
+                    .background(Color.red)
+                }
+                .cornerRadius(10)
+                .foregroundColor(Color.white)
             }
         }
         .padding()
@@ -234,6 +255,7 @@ struct MainContent_FullScreenModalView: View{
                 MyBookmark.setup()
                 MyBookmark.destinations[destinationIndex].isBookmark = true
                 MyBookmark.destinations[destinationIndex].plandate = dateFormat()
+                
             } label: {
                 if(destination.plandate != "0"){
                     Label("Edit My Plan", systemImage: "pencil")

@@ -31,7 +31,7 @@ struct UpIndicatorContent_BookmarkCardView: View{
                 .resizable()
                 .scaledToFill()
         }
-        .frame(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height-500)
+        .frame(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height*(25/100))
     }
 }
 
